@@ -1,0 +1,32 @@
+#!/usr/bin/ansible-playbook
+---
+- name: Setup playlist
+  connection: local
+  hosts: urls
+  vars:
+    music_dir: '{{ playbook_dir }}/music_dir'
+
+  tasks:
+    - name: Create music_dir if it doesn't exist
+      file:
+        path: '{{ music_dir }}'
+        state: directory
+
+    - name: Install required packages
+      package:
+        name: '{{ package }}'
+      loop:
+        - python3-pip
+        - ffmpeg
+      loop_control:
+        loop_var: package
+
+    - name: Install youtube-dl
+      pip:
+        name: youtube-dl
+      delegate_to: localhost
+
+    - name: Download music
+      command: youtube-dl --download-archive=archive.txt --extract-audio --audio-format=vorbis --audio-quality=3 --no-overwrites --no-post-overwrites --no-progress --no-call-home '{{ inventory_hostname }}'
+      args:
+        chdir: '{{ music_dir }}'
