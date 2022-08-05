@@ -1,12 +1,11 @@
 #!/usr/bin/ansible-playbook
 ---
-- name: Setup playlist
+- name: Setup host machine
   connection: local
-  hosts: urls
+  hosts: localhost
   gather_facts: false
   vars:
     music_dir: '{{ playbook_dir }}/music_dir'
-
   tasks:
     - name: Create music_dir if it doesn't exist
       file:
@@ -27,6 +26,14 @@
         name: youtube-dl
       delegate_to: localhost
 
+
+- name: Setup playlist
+  connection: local
+  hosts: urls 
+  gather_facts: false
+  vars:
+    music_dir: '{{ playbook_dir }}/music_dir'
+  tasks:
     - name: Download music
       command: youtube-dl --download-archive=archive.txt --extract-audio --audio-format=vorbis --audio-quality=3 --no-overwrites --no-post-overwrites --no-progress --no-call-home '{{ inventory_hostname }}'
       args:
