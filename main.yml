@@ -3,6 +3,7 @@
 - name: Setup playlist
   connection: local
   hosts: urls
+  gather_facts: false
   vars:
     music_dir: '{{ playbook_dir }}/music_dir'
 
