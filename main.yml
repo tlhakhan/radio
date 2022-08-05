@@ -24,8 +24,6 @@
     - name: Install youtube-dl
       pip:
         name: youtube-dl
-      delegate_to: localhost
-
 
 - name: Setup playlist
   connection: local
@@ -38,3 +36,5 @@
       command: youtube-dl --download-archive=archive.txt --extract-audio --audio-format=vorbis --audio-quality=3 --no-overwrites --no-post-overwrites --no-progress --no-call-home '{{ inventory_hostname }}'
       args:
         chdir: '{{ music_dir }}'
+
+...
